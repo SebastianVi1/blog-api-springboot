@@ -1,6 +1,9 @@
 package org.sebas.blogbackendspringboot.controller;
 
+import jakarta.validation.Valid;
+import org.sebas.blogbackendspringboot.dto.CreatePostDto;
 import org.sebas.blogbackendspringboot.dto.PostDto;
+import org.sebas.blogbackendspringboot.dto.UpdatePostDto;
 import org.sebas.blogbackendspringboot.model.Post;
 import org.sebas.blogbackendspringboot.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,33 +29,38 @@ public class PostController {
     }
 
     @PostMapping("/posts")
-    public ResponseEntity<?> postPost(@RequestBody Post post){
-        return service.postPost(post);
-
+    public ResponseEntity<?> createPost(@Valid @RequestBody CreatePostDto createPostDto){
+        return service.createPost(createPostDto);
     }
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<PostDto> getPostById(@PathVariable long id){
-        return service.getPostByid(id);
+        return service.getPostById(id);
     }
 
     @PutMapping("/posts/{id}")
-    public ResponseEntity<?> editPost (@PathVariable Long id){
-        return service.editPost(id);
+    public ResponseEntity<?> updatePost(@PathVariable Long id, @Valid @RequestBody UpdatePostDto updatePostDto){
+        return service.updatePost(id, updatePostDto);
     }
 
     @DeleteMapping("/posts/{id}")
-    public ResponseEntity<?> deletePost (@PathVariable Long id){
+    public ResponseEntity<?> deletePost(@PathVariable Long id){
         return service.deletePost(id);
     }
 
-
+    /**
+     * Search posts by title
+     * Returns posts matching the title parameter
+     */
     @GetMapping("/posts/search")
     public ResponseEntity<List<PostDto>> searchPostByTitle(@RequestParam String title){
-        System.out.println("Searching with " + title);
         return service.searchPostByTitle(title);
     }
 
+    /**
+     * Get posts by author ID
+     * Returns all posts written by the specified author
+     */
     @GetMapping("/posts/author/{id}")
     public ResponseEntity<List<PostDto>> searchPostByAuthor(@PathVariable Long id){
         return service.searchPostByAuthorId(id);

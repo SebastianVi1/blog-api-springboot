@@ -1,7 +1,8 @@
 package org.sebas.blogbackendspringboot.controller;
 
+import jakarta.validation.Valid;
 import org.sebas.blogbackendspringboot.dto.CommentDto;
-import org.sebas.blogbackendspringboot.model.Comment;
+import org.sebas.blogbackendspringboot.dto.CreateCommentDto;
 import org.sebas.blogbackendspringboot.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,8 @@ public class CommentController {
         this.service = service;
     }
     @PostMapping("/posts/{postId}/comments")
-    public ResponseEntity<?> addComment(@PathVariable Long postId, @RequestBody Comment com){
-        return service.addComment(postId, com);
+    public ResponseEntity<?> addComment(@PathVariable Long postId, @Valid @RequestBody CreateCommentDto createCommentDto){
+        return service.addComment(postId, createCommentDto);
     }
 
     @GetMapping("/posts/{postId}/comments")

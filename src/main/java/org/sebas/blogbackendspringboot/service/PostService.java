@@ -59,27 +59,21 @@ public class PostService {
     }
 
 
-    public ResponseEntity<?> editPost(Long id, Post updatedPost) {
-        Optional<Post> existingPost = repo.findById(id);
+    public ResponseEntity<?> editPost(Long id) {
+        Optional<Post> post = repo.findById(id);
 
-        if (existingPost.isEmpty()){
+        if (post.isEmpty()){
             return new ResponseEntity<>("Post not found", HttpStatus.NOT_FOUND);
         }
-        
-        Post post = existingPost.get();
-        post.setTitle(updatedPost.getTitle());
-        post.setContent(updatedPost.getContent());
-        post.setCategory(updatedPost.getCategory());
-        
-        repo.save(post);
+        repo.save(post.get());
         return ResponseEntity.ok(post);
     }
 
     public ResponseEntity<?> deletePost(Long id){
        Optional<Post> post = repo.findById(id);
 
-       if (post.isEmpty()){
-           return new ResponseEntity<>("Post not found", HttpStatus.NOT_FOUND);
+       if (post.isPresent()){
+           return new ResponseEntity<>("Post not found", HttpStatus.BAD_REQUEST);
        }
        repo.delete(post.get());
        return new ResponseEntity<Post>(post.get(), HttpStatus.OK);

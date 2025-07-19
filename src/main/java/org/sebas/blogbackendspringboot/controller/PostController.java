@@ -37,8 +37,8 @@ public class PostController {
     }
 
     @PutMapping("/posts/{id}")
-    public ResponseEntity<?> editPost (@PathVariable Long id, @RequestBody Post post){
-        return service.editPost(id, post);
+    public ResponseEntity<?> editPost (@PathVariable Long id){
+        return service.editPost(id);
     }
 
     @DeleteMapping("/posts/{id}")

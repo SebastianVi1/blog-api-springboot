@@ -36,7 +36,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/api/login", "/api/register")
+                        .requestMatchers("login", "register")
                         .permitAll()
                         .anyRequest().authenticated());
         http.httpBasic(Customizer.withDefaults());

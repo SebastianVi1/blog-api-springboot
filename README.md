@@ -1,0 +1,204 @@
+# Blog Backend API
+
+A RESTful API for a blog system built with Spring Boot, featuring JWT authentication, post management, and comment functionality.
+
+## 🚀 Features
+
+- **JWT Authentication & Authorization** - Secure login and registration with JWT tokens
+- **Post Management** - Full CRUD operations for blog posts
+- **Comment System** - Add and retrieve comments on posts
+- **Category Management** - Organize posts by categories
+- **Search Functionality** - Search posts by title and author
+- **User Management** - User registration and authentication
+- **RESTful API** - Clean REST endpoints following best practices
+
+## 🛠️ Tech Stack
+
+- **Java 21**
+- **Spring Boot 3.5.3**
+- **Spring Security** - Authentication and authorization
+- **Spring Data JPA** - Database operations
+- **MySQL** - Database
+- **JWT** - JSON Web Tokens for authentication
+- **Lombok** - Reduces boilerplate code
+- **Maven** - Dependency management
+
+## 📋 Prerequisites
+
+- Java 21 or higher
+- MySQL 8.0 or higher
+- Maven 3.6+
+
+## ⚙️ Installation & Setup
+
+### 1. Clone the repository
+```bash
+git clone <repository-url>
+cd blog-backend-springboot
+```
+
+### 2. Database Setup
+Create a MySQL database named `blog`:
+```sql
+CREATE DATABASE blog;
+```
+
+### 3. Configure Database
+Update `src/main/resources/application.properties` with your database credentials:
+```properties
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+```
+
+### 4. Run the Application
+```bash
+mvn spring-boot:run
+```
+
+The API will be available at `http://localhost:8080`
+
+## 📚 API Endpoints
+
+### Authentication
+- `POST /api/register` - Register a new user
+- `POST /api/login` - Login and get JWT token
+
+### Posts
+- `GET /api/posts` - Get all posts
+- `POST /api/posts` - Create a new post
+- `GET /api/posts/{id}` - Get post by ID
+- `PUT /api/posts/{id}` - Update a post
+- `DELETE /api/posts/{id}` - Delete a post
+- `GET /api/posts/search?title={title}` - Search posts by title
+- `GET /api/posts/author/{id}` - Get posts by author ID
+
+### Comments
+- `POST /api/posts/{postId}/comments` - Add comment to a post
+- `GET /api/posts/{postId}/comments` - Get comments for a post
+
+## 📝 Example Usage
+
+### Register a User
+```json
+POST /api/register
+{
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+### Login and Get JWT Token
+```json
+POST /api/login
+{
+  "username": "johndoe",
+  "password": "password123"
+}
+```
+
+### Create a Post
+```json
+POST /api/posts
+{
+  "title": "My First Post",
+  "content": "This is the content of my first post.",
+  "author": {
+    "id": 1
+  },
+  "category": {
+    "id": 1
+  }
+}
+```
+
+### Add a Comment
+```json
+POST /api/posts/1/comments
+{
+  "content": "Great post!",
+  "user": {
+    "id": 1
+  }
+}
+```
+
+## 🔐 Authentication Flow
+
+1. **Register** a new user using `/api/register`
+2. **Login** using `/api/login` to get a JWT token
+3. **Include the token** in the Authorization header for protected endpoints:
+   ```
+   Authorization: Bearer <your-jwt-token>
+   ```
+
+## 🏗️ Project Structure
+
+```
+src/main/java/org/sebas/blogbackendspringboot/
+├── controller/          # REST controllers
+│   ├── AuthController.java
+│   ├── PostController.java
+│   └── CommentController.java
+├── service/            # Business logic
+│   ├── PostService.java
+│   ├── CommentService.java
+│   ├── UserService.java
+│   ├── JWTService.java
+│   └── MyUserDetailsService.java
+├── model/              # JPA entities
+│   ├── User.java
+│   ├── UserPrincipal.java
+│   ├── Post.java
+│   ├── Comment.java
+│   ├── Category.java
+│   └── Role.java
+├── dto/                # Data Transfer Objects
+│   ├── PostDto.java
+│   └── CommentDto.java
+├── repo/               # Repository interfaces
+│   ├── PostRepo.java
+│   ├── CommentRepo.java
+│   └── UserRepo.java
+└── SecurityConfig/     # Security configuration
+    ├── SecurityConfig.java
+    └── JWTFilter.java
+```
+
+## 🔐 Security Features
+
+- **JWT Token Generation** - Automatic token creation on login
+- **Password Encryption** - BCrypt password hashing
+- **Token Validation** - Automatic token verification for protected endpoints
+- **User Authentication** - Username/password authentication
+- **Role-based Access** - User roles for authorization
+
+## 🗄️ Database Schema
+
+The application uses the following main entities:
+- **User** - Blog users with username, email, and encrypted password
+- **Post** - Blog posts with title, content, author, and category
+- **Comment** - Comments on posts with content and user
+- **Category** - Post categories for organization
+- **Role** - User roles for authorization
+
+## 🧪 Testing
+
+Run tests with:
+```bash
+mvn test
+```
+
+## 📦 Build
+
+Build the application:
+```bash
+mvn clean package
+```
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 👨‍💻 Author
+
+Sebastian - Blog Backend Spring Boot Project 

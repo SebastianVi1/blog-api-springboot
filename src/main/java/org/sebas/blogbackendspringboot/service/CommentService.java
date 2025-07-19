@@ -28,7 +28,7 @@ public class CommentService {
                 com.getId(),
                 com.getContent(),
                 com.getCreatedAt(),
-                com.getUser().getName(),
+                com.getUser().getUsername(),
                 com.getPost()
         );
     }

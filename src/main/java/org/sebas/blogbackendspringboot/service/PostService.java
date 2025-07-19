@@ -28,7 +28,7 @@ public class PostService {
                  post.getId(),
                  post.getTitle(),
                  post.getContent(),
-                 post.getAuthor().getName(),
+                 post.getAuthor().getUsername(),
                  post.getCreatedDate(),
                  post.getCategory().getName(),
                  post.getComments()

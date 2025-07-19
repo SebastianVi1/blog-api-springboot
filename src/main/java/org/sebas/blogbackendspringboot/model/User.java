@@ -26,7 +26,7 @@ public class User {
     private List<Post> posts;
 
 
-    @OneToMany(mappedBy = "username")
+    @OneToMany(mappedBy = "user")
     private List<Comment> comments;
 
     @ManyToMany(fetch = FetchType.EAGER)

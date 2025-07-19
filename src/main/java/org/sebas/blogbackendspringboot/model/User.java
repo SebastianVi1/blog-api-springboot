@@ -18,7 +18,7 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
+    private String username;
     private String email;
     private String password;
 
@@ -26,7 +26,7 @@ public class User {
     private List<Post> posts;
 
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "username")
     private List<Comment> comments;
 
     @ManyToMany(fetch = FetchType.EAGER)

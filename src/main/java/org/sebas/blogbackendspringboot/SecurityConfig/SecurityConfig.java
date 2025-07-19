@@ -22,9 +22,12 @@ public class SecurityConfig {
 
     private MyUserDetailsService userDetailsService;
 
+    private JWTFilter jwtFilter;
+
     @Autowired
-    public void setService(MyUserDetailsService userDetailsService){
+    public void setService(MyUserDetailsService userDetailsService, JWTFilter jwtFilter){
         this.userDetailsService = userDetailsService;
+        this.jwtFilter = jwtFilter;
     }
 
     @Bean

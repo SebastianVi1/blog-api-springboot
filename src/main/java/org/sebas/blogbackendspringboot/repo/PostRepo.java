@@ -15,5 +15,6 @@ public interface PostRepo extends JpaRepository<Post, Long> {
     )
     List<Post> searchByTitle(String title);
 
-   List<Post> searchPostByAuthorId(Long id);
+    @Query("SELECT p from Post p WHERE p.author.id = :id")
+    List<Post> searchPostByAuthorId(Long id);
 }

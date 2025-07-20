@@ -15,17 +15,21 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserRepo repo;
+    
+    @Autowired
     private AuthenticationManager authManager;
 
     @Autowired
     private JWTService jwtService;
 
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(
-            12
-    );
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
+    /**
+     * Register a new user
+     * Encrypts password before saving to database
+     */
     public User register(User user){
         user.setPassword(encoder.encode(user.getPassword()));
-        System.out.println(user.getPassword());
         repo.save(user);
         return user;
     }
@@ -34,11 +38,15 @@ public class UserService {
         return repo.findAll();
     }
 
-    public String verify(User user) {
+    /**
+     * Verify user credentials and generate JWT token
+     * Authenticates user and returns JWT token if successful
+     */
+    public String verify(String username, String password) {
         Authentication authentication =
-                authManager.authenticate( new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
+                authManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         if (authentication.isAuthenticated())
-            return jwtService.generateToken(user.getUsername());
+            return jwtService.generateToken(username);
         return "fail";
     }
 }

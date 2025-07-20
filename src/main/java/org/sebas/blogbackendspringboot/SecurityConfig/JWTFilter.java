@@ -21,8 +21,7 @@ import java.io.IOException;
 public class JWTFilter extends OncePerRequestFilter {
 
     private JWTService jwtService;
-
-    ApplicationContext context;
+    private ApplicationContext context;
 
     @Autowired
     public void setJwtService(JWTService jwtService, ApplicationContext context) {
@@ -36,7 +35,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String token = null;
         String username = null;
 
-        if (authHeader != null && authHeader.startsWith("Barer ")){
+        if (authHeader != null && authHeader.startsWith("Bearer ")){
             token = authHeader.substring(7);
             username = jwtService.extractUsername(token);
         }

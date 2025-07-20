@@ -1,6 +1,6 @@
 # Blog Backend API
 
-A RESTful API for a blog system built with Spring Boot, featuring JWT authentication, post management, and comment functionality.
+A RESTful API for a blog system built with Spring Boot, featuring JWT authentication, post management, and comment functionality with comprehensive input validation.
 
 ## 🚀 Features
 
@@ -10,7 +10,9 @@ A RESTful API for a blog system built with Spring Boot, featuring JWT authentica
 - **Category Management** - Organize posts by categories
 - **Search Functionality** - Search posts by title and author
 - **User Management** - User registration and authentication
-- **RESTful API** - Clean REST endpoints following best practices
+- **Input Validation** - Comprehensive validation for all endpoints
+- **DTO Pattern** - Secure data transfer with validation
+- **Global Exception Handling** - Structured error responses
 
 ## 🛠️ Tech Stack
 
@@ -103,12 +105,18 @@ POST /api/posts
 {
   "title": "My First Post",
   "content": "This is the content of my first post.",
-  "author": {
-    "id": 1
-  },
-  "category": {
-    "id": 1
-  }
+  "authorId": 1,
+  "categoryId": 1
+}
+```
+
+### Update a Post
+```json
+PUT /api/posts/1
+{
+  "title": "Updated Post Title",
+  "content": "This is the updated content.",
+  "categoryId": 2
 }
 ```
 
@@ -117,9 +125,7 @@ POST /api/posts
 POST /api/posts/1/comments
 {
   "content": "Great post!",
-  "user": {
-    "id": 1
-  }
+  "userId": 1
 }
 ```
 
@@ -155,14 +161,22 @@ src/main/java/org/sebas/blogbackendspringboot/
 │   └── Role.java
 ├── dto/                # Data Transfer Objects
 │   ├── PostDto.java
-│   └── CommentDto.java
+│   ├── CommentDto.java
+│   ├── UserRegistrationDto.java
+│   ├── UserLoginDto.java
+│   ├── CreatePostDto.java
+│   ├── UpdatePostDto.java
+│   └── CreateCommentDto.java
 ├── repo/               # Repository interfaces
 │   ├── PostRepo.java
 │   ├── CommentRepo.java
-│   └── UserRepo.java
-└── SecurityConfig/     # Security configuration
-    ├── SecurityConfig.java
-    └── JWTFilter.java
+│   ├── UserRepo.java
+│   └── CategoryRepo.java
+├── SecurityConfig/     # Security configuration
+│   ├── SecurityConfig.java
+│   └── JWTFilter.java
+└── exception/          # Exception handling
+    └── GlobalExceptionHandler.java
 ```
 
 ## 🔐 Security Features
@@ -172,6 +186,13 @@ src/main/java/org/sebas/blogbackendspringboot/
 - **Token Validation** - Automatic token verification for protected endpoints
 - **User Authentication** - Username/password authentication
 - **Role-based Access** - User roles for authorization
+
+## ✅ Validation Features
+
+- **Input Validation** - All endpoints validate input data
+- **Custom Error Messages** - Clear validation error responses
+- **DTO Validation** - Separate validation for different operations
+- **Global Exception Handling** - Structured error responses
 
 ## 🗄️ Database Schema
 
@@ -195,6 +216,7 @@ Build the application:
 ```bash
 mvn clean package
 ```
+
 ## 📄 License
 
 This project is licensed under the MIT License.

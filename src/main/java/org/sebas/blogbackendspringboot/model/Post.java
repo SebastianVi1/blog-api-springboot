@@ -2,8 +2,10 @@ package org.sebas.blogbackendspringboot.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -27,7 +29,8 @@ public class Post {
     @NotBlank(message = "Content is required")
     @Size(min = 10, message = "Content must be at least 10 characters")
     private String content;
-    
+
+    @CreationTimestamp  //TODO: Test if this works or i have to do the auditingjpa
     private LocalDateTime createdDate;
 
     @ManyToOne

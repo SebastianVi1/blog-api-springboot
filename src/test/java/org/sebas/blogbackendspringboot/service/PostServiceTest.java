@@ -16,6 +16,7 @@ import org.sebas.blogbackendspringboot.model.User;
 import org.sebas.blogbackendspringboot.repo.CategoryRepo;
 import org.sebas.blogbackendspringboot.repo.PostRepo;
 import org.sebas.blogbackendspringboot.repo.UserRepo;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -110,7 +111,16 @@ class PostServiceTest {
 
         verify(postRepo).findAll();
 
+    }
 
-
+    @Test
+    void shouldReturnAPostById(){
+        // Given
+        when(postRepo.findById(1L)).thenReturn(Optional.of(testPost));
+        // When
+        ResponseEntity<PostDto> result = postService.getPostById(1L);
+        //Then
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(result.getBody().getTitle()).isEqualTo("Test Post");
     }
 }

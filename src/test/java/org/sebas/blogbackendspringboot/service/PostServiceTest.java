@@ -135,4 +135,33 @@ class PostServiceTest {
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(postRepo).findById(1L);
     }
+
+    @Test
+    void shouldUpdateAPostWithOkStatus(){
+        //Given
+        when(postRepo.findById(1L)).thenReturn(Optional.of(testPost));
+        when(categoryRepo.findById(1L)).thenReturn(Optional.of(testCategory));
+        //When
+        var result = postService.updatePost(1L,updatePostDto);
+        //Then
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(postRepo).findById(1L);
+        verify(categoryRepo).findById(1L);
+    }
+
+    @Test
+    void souldReturnAPostByHisTitleWithStatusOK(){
+       //Given
+        when(postRepo.searchByTitle("Test Post")).thenReturn(List.of(testPost));
+
+        //When
+        ResponseEntity<List<PostDto>> result = postService.searchPostByTitle("Test Post");
+        //THen
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(result.getBody().size()).isEqualTo(1);
+        assertThat(result.getBody().getFirst().getTitle())
+                .isEqualTo("Test Post");
+
+        verify(postRepo).searchByTitle("Test Post");
+    }
 }

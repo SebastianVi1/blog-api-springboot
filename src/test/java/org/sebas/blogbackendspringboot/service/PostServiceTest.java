@@ -122,5 +122,17 @@ class PostServiceTest {
         //Then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(result.getBody().getTitle()).isEqualTo("Test Post");
+        verify(postRepo).findById(1L);
+    }
+
+    @Test
+    void shouldDeleteATaskWithOkStatus(){
+        //Given
+        when(postRepo.findById(1L)).thenReturn(Optional.of(testPost));
+        //When
+        ResponseEntity<?> result = postService.deletePost(1L);
+        //Then
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(postRepo).findById(1L);
     }
 }

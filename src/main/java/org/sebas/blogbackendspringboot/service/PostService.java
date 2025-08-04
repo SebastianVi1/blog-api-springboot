@@ -1,5 +1,6 @@
 package org.sebas.blogbackendspringboot.service;
 
+import org.sebas.blogbackendspringboot.dto.CommentDto;
 import org.sebas.blogbackendspringboot.dto.CreatePostDto;
 import org.sebas.blogbackendspringboot.dto.PostDto;
 import org.sebas.blogbackendspringboot.dto.UpdatePostDto;
@@ -36,14 +37,26 @@ public class PostService {
      * Convert Post entity to PostDto for secure data transfer
      */
     private PostDto createPostDto(Post post) {
+        List<CommentDto> commentDtos = post.getComments().stream()
+                .map(comment -> {
+                    CommentDto dto = new CommentDto();
+                    dto.setId(comment.getId());
+                    dto.setContent(comment.getContent());
+                    dto.setCreatedAt(comment.getCreatedAt());
+                    dto.setAuthor(comment.getUser() != null ? comment.getUser().getUsername() : null);
+                    dto.setPostId(post.getId());
+                    return dto;
+                })
+                .toList();
         return new PostDto(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
                 post.getAuthor().getUsername(),
+                post.getAuthor().getId(),
                 post.getCreatedDate(),
                 post.getCategory().getName(),
-                post.getComments()
+                commentDtos
         );
     }
 

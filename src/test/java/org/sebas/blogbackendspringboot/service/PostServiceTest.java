@@ -158,6 +158,7 @@ class PostServiceTest {
         ResponseEntity<List<PostDto>> result = postService.searchPostByTitle("Test Post");
         //THen
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertNotNull(result.getBody());
         assertThat(result.getBody().size()).isEqualTo(1);
         assertThat(result.getBody().getFirst().getTitle())
                 .isEqualTo("Test Post");

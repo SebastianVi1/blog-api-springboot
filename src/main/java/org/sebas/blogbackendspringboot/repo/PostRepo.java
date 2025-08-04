@@ -9,12 +9,8 @@ import java.util.List;
 
 @Repository
 public interface PostRepo extends JpaRepository<Post, Long> {
-
-    @Query("SELECT p from Post p WHERE "+
-            "LOWER(p.title) LIKE (concat('%', :title, '%'))"
-    )
+    @Query("SELECT p FROM Post p WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :title, '%'))")
     List<Post> searchByTitle(String title);
 
-    @Query("SELECT p from Post p WHERE p.author.id = :id")
     List<Post> searchPostByAuthorId(Long id);
 }

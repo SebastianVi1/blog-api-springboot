@@ -53,7 +53,7 @@ public class PostController {
      * Returns posts matching the title parameter
      */
     @GetMapping("/posts/search")
-    public ResponseEntity<List<PostDto>> searchPostByTitle(@RequestParam String title){
+    public ResponseEntity<List<PostDto>> searchPostByTitle(@RequestParam(value = "title") String title){
         return service.searchPostByTitle(title);
     }
 

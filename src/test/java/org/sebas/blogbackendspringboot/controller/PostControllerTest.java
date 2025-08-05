@@ -1,35 +1,31 @@
 package org.sebas.blogbackendspringboot.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.sebas.blogbackendspringboot.SecurityConfig.SecurityConfig;
 import org.sebas.blogbackendspringboot.TestSecurityConfig;
 import org.sebas.blogbackendspringboot.dto.CommentDto;
 import org.sebas.blogbackendspringboot.dto.CreatePostDto;
 import org.sebas.blogbackendspringboot.dto.PostDto;
 import org.sebas.blogbackendspringboot.dto.UpdatePostDto;
 import org.sebas.blogbackendspringboot.model.Category;
-import org.sebas.blogbackendspringboot.model.Comment;
 import org.sebas.blogbackendspringboot.model.Post;
 import org.sebas.blogbackendspringboot.model.User;
-import org.sebas.blogbackendspringboot.repo.CategoryRepo;
-import org.sebas.blogbackendspringboot.repo.UserRepo;
 import org.sebas.blogbackendspringboot.service.JWTService;
 import org.sebas.blogbackendspringboot.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.util.Arrays.isArray;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -136,6 +132,20 @@ class PostControllerTest {
         when(postService.deletePost(999909L)).thenReturn(ResponseEntity.notFound().build());
         mockMvc.perform(delete("/api/posts/{id}", 999909L))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldReturnOkWithAnArrayWithPostDto() throws Exception {
+        PostDto postDto = new PostDto();
+        postDto.setTitle("Test title");
+        List<PostDto> listPostDto = new ArrayList<>();
+        listPostDto.add(postDto);
+        when(postService.searchPostByTitle("Test")).thenReturn(ResponseEntity.ok(listPostDto));
+        mockMvc.perform(get("/api/posts/search")
+                        .param("title", "Test"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].title").value("Test title"));
     }
 
 }

@@ -5,14 +5,16 @@ A RESTful API for a blog system built with Spring Boot, featuring JWT authentica
 ## 🚀 Features
 
 - **JWT Authentication & Authorization** - Secure login and registration with JWT tokens
-- **Post Management** - Full CRUD operations for blog posts
+- **Post Management** - Full CRUD operations for blog posts using CreatePostDto for all post-related endpoints
 - **Comment System** - Add and retrieve comments on posts
 - **Category Management** - Organize posts by categories
 - **Search Functionality** - Search posts by title and author
 - **User Management** - User registration and authentication
 - **Input Validation** - Comprehensive validation for all endpoints
-- **DTO Pattern** - Secure data transfer with validation
+- **DTO Pattern** - Secure data transfer with validation (now using CreatePostDto for posts)
 - **Global Exception Handling** - Structured error responses
+- **Refactored Post Endpoints** - All post endpoints now use CreatePostDto instead of PostDto
+- **Consistent API Responses** - Unified response structure for post operations
 
 ## 🛠️ Tech Stack
 
@@ -65,14 +67,14 @@ The API will be available at `http://localhost:8080`
 - `POST /api/register` - Register a new user
 - `POST /api/login` - Login and get JWT token
 
-### Posts
-- `GET /api/posts` - Get all posts
-- `POST /api/posts` - Create a new post
-- `GET /api/posts/{id}` - Get post by ID
-- `PUT /api/posts/{id}` - Update a post
+### Posts (now using CreatePostDto)
+- `GET /api/posts` - Get all posts (returns List<CreatePostDto>)
+- `POST /api/posts` - Create a new post (accepts CreatePostDto)
+- `GET /api/posts/{id}` - Get post by ID (returns CreatePostDto)
+- `PUT /api/posts/{id}` - Update a post (accepts CreatePostDto)
 - `DELETE /api/posts/{id}` - Delete a post
-- `GET /api/posts/search?title={title}` - Search posts by title
-- `GET /api/posts/author/{id}` - Get posts by author ID
+- `GET /api/posts/search?title={title}` - Search posts by title (returns List<CreatePostDto>)
+- `GET /api/posts/author/{id}` - Get posts by author ID (returns List<CreatePostDto>)
 
 ### Comments
 - `POST /api/posts/{postId}/comments` - Add comment to a post
@@ -160,11 +162,10 @@ src/main/java/org/sebas/blogbackendspringboot/
 │   ├── Category.java
 │   └── Role.java
 ├── dto/                # Data Transfer Objects
-│   ├── PostDto.java
+│   ├── CreatePostDto.java
 │   ├── CommentDto.java
 │   ├── UserRegistrationDto.java
 │   ├── UserLoginDto.java
-│   ├── CreatePostDto.java
 │   ├── UpdatePostDto.java
 │   └── CreateCommentDto.java
 ├── repo/               # Repository interfaces
@@ -223,4 +224,4 @@ This project is licensed under the MIT License.
 
 ## 👨‍💻 Author
 
-Sebastian - Blog Backend Spring Boot Project 
+Sebastian - Blog Backend Spring Boot Project

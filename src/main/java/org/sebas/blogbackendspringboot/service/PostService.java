@@ -139,7 +139,7 @@ public class PostService {
             return ResponseEntity.notFound().build();
         }
         repo.delete(post.get());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(post);
     }
 
     /**

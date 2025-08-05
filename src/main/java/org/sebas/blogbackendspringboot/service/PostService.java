@@ -2,8 +2,6 @@ package org.sebas.blogbackendspringboot.service;
 
 import org.sebas.blogbackendspringboot.dto.CommentDto;
 import org.sebas.blogbackendspringboot.dto.CreatePostDto;
-import org.sebas.blogbackendspringboot.dto.PostDto;
-import org.sebas.blogbackendspringboot.dto.UpdatePostDto;
 import org.sebas.blogbackendspringboot.model.Category;
 import org.sebas.blogbackendspringboot.model.Post;
 import org.sebas.blogbackendspringboot.model.User;
@@ -34,40 +32,25 @@ public class PostService {
     }
 
     /**
-     * Convert Post entity to PostDto for secure data transfer
+     * Convert Post entity to CreatePostDto for secure data transfer
      */
-    private PostDto createPostDto(Post post) {
-        List<CommentDto> commentDtos = post.getComments().stream()
-                .map(comment -> {
-                    CommentDto dto = new CommentDto();
-                    dto.setId(comment.getId());
-                    dto.setContent(comment.getContent());
-                    dto.setCreatedAt(comment.getCreatedAt());
-                    dto.setAuthor(comment.getUser() != null ? comment.getUser().getUsername() : null);
-                    dto.setPostId(post.getId());
-                    return dto;
-                })
-                .toList();
-        return new PostDto(
-                post.getId(),
+    private CreatePostDto createCreatePostDto(Post post) {
+        return new CreatePostDto(
                 post.getTitle(),
                 post.getContent(),
-                post.getAuthor().getUsername(),
                 post.getAuthor().getId(),
-                post.getCreatedDate(),
-                post.getCategory().getName(),
-                commentDtos
+                post.getCategory().getId()
         );
     }
 
     //Return a new list with dtos
-    private List<PostDto> convertToDtoList(List<Post> postList){
-        return postList.stream().map(this::createPostDto).toList();
+    private List<CreatePostDto> convertToCreatePostDtoList(List<Post> postList){
+        return postList.stream().map(this::createCreatePostDto).toList();
     }
 
-    public ResponseEntity<List<PostDto>> getPostsList() {
+    public ResponseEntity<List<CreatePostDto>> getPostsList() {
         List<Post> posts = repo.findAll();
-        List<PostDto> postDtoList = convertToDtoList(posts);
+        List<CreatePostDto> postDtoList = convertToCreatePostDtoList(posts);
         return new ResponseEntity<>(postDtoList, HttpStatus.OK);
     }
 
@@ -98,12 +81,12 @@ public class PostService {
         return ResponseEntity.ok(createPostDto);
     }
 
-    public ResponseEntity<PostDto> getPostById(Long id){
+    public ResponseEntity<CreatePostDto> getPostById(Long id){
         Optional<Post> post = repo.findById(id);
         if (post.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        PostDto postDto = createPostDto(post.get());
+        CreatePostDto postDto = createCreatePostDto(post.get());
         return ResponseEntity.ok(postDto);
     }
 
@@ -111,7 +94,7 @@ public class PostService {
      * Update an existing post
      * Validates post existence and category before updating
      */
-    public ResponseEntity<?> updatePost(Long id, UpdatePostDto updatePostDto) {
+    public ResponseEntity<?> updatePost(Long id, CreatePostDto updatePostDto) {
         Optional<Post> existingPost = repo.findById(id);
         Optional<Category> category = categoryRepo.findById(updatePostDto.getCategoryId());
 
@@ -146,9 +129,9 @@ public class PostService {
      * Search posts by title
      * Returns posts matching the title parameter
      */
-    public ResponseEntity<List<PostDto>> searchPostByTitle(String title) {
+    public ResponseEntity<List<CreatePostDto>> searchPostByTitle(String title) {
         List<Post> posts = repo.searchByTitle(title);
-        List<PostDto> postDtoList = convertToDtoList(posts);
+        List<CreatePostDto> postDtoList = convertToCreatePostDtoList(posts);
         return ResponseEntity.ok(postDtoList);
     }
 
@@ -156,9 +139,9 @@ public class PostService {
      * Get posts by author ID
      * Returns all posts written by the specified author
      */
-    public ResponseEntity<List<PostDto>> searchPostByAuthorId(Long id){
+    public ResponseEntity<List<CreatePostDto>> searchPostByAuthorId(Long id){
         List<Post> postList = repo.searchPostByAuthorId(id);
-        List<PostDto> postDtoList = convertToDtoList(postList);
+        List<CreatePostDto> postDtoList = convertToCreatePostDtoList(postList);
         return new ResponseEntity<>(postDtoList, HttpStatus.OK);
     }
 }

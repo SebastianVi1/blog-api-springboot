@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.sebas.blogbackendspringboot.TestSecurityConfig;
 import org.sebas.blogbackendspringboot.dto.CommentDto;
 import org.sebas.blogbackendspringboot.dto.CreatePostDto;
-import org.sebas.blogbackendspringboot.dto.PostDto;
-import org.sebas.blogbackendspringboot.dto.UpdatePostDto;
 import org.sebas.blogbackendspringboot.model.Category;
 import org.sebas.blogbackendspringboot.model.Post;
 import org.sebas.blogbackendspringboot.model.User;
@@ -25,7 +23,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.util.Arrays.isArray;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -50,7 +47,6 @@ class PostControllerTest {
     private Category testCategory;
     private Post testPost;
     private CreatePostDto createPostDto;
-    private UpdatePostDto updatePostDto;
     @BeforeEach
     void setUp(){
         testUser = new User();
@@ -70,19 +66,16 @@ class PostControllerTest {
         testPost.setComments(List.of());
 
         createPostDto = new CreatePostDto("Test Post", "Test content", 1L, 1L);
-        updatePostDto = new UpdatePostDto("Updated Post", "Updated content", 1L);
     }
 
     @Test
     void shouldReturnOkRequestingAllPosts() throws Exception {
         List<CommentDto> comments = List.of();
         //Given
-        List<PostDto> posts = List.of(
-                new PostDto(1L, "Test Title", "Test Content", "John Doe", 1L,
-                        LocalDateTime.now(), "Tech", comments),
-                new PostDto(2L, "Second Title", "More Content", "Jane Doe", 2L,
-                        LocalDateTime.now(), "Science", comments)
-        );
+        List<CreatePostDto> posts = List.of(
+                        new CreatePostDto("Test Title", "Test Content", 1L, 1L),
+                        new CreatePostDto("Second Title", "More Content", 2L, 2L)
+                );
 
         //When and then
         when(postService.getPostsList()).thenReturn(ResponseEntity.ok(posts));
@@ -90,7 +83,6 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].title").value("Test Title"));
     }
 
@@ -135,12 +127,12 @@ class PostControllerTest {
     }
 
     @Test
-    void shouldReturnOkWithAnArrayWithPostDto() throws Exception {
-        PostDto postDto = new PostDto();
-        postDto.setTitle("Test title");
-        List<PostDto> listPostDto = new ArrayList<>();
-        listPostDto.add(postDto);
-        when(postService.searchPostByTitle("Test")).thenReturn(ResponseEntity.ok(listPostDto));
+    void shouldReturnOkWithAnArrayWithCreatePostDto() throws Exception {
+        CreatePostDto createPostDto = new CreatePostDto();
+        createPostDto.setTitle("Test title");
+        List<CreatePostDto> listCreatePostDto = new ArrayList<>();
+        listCreatePostDto.add(createPostDto);
+        when(postService.searchPostByTitle("Test")).thenReturn(ResponseEntity.ok(listCreatePostDto));
         mockMvc.perform(get("/api/posts/search")
                         .param("title", "Test"))
                 .andExpect(status().isOk())

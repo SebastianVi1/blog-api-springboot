@@ -7,16 +7,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.sebas.blogbackendspringboot.dto.CreatePostDto;
-import org.sebas.blogbackendspringboot.dto.PostDto;
-import org.sebas.blogbackendspringboot.dto.UpdatePostDto;
 import org.sebas.blogbackendspringboot.model.Category;
-import org.sebas.blogbackendspringboot.model.Comment;
 import org.sebas.blogbackendspringboot.model.Post;
 import org.sebas.blogbackendspringboot.model.User;
 import org.sebas.blogbackendspringboot.repo.CategoryRepo;
 import org.sebas.blogbackendspringboot.repo.PostRepo;
 import org.sebas.blogbackendspringboot.repo.UserRepo;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -50,7 +46,6 @@ class PostServiceTest {
     private Category testCategory;
     private Post testPost;
     private CreatePostDto createPostDto;
-    private UpdatePostDto updatePostDto;
 
     @BeforeEach
     void setUp(){
@@ -74,7 +69,6 @@ class PostServiceTest {
         testPost.setComments(Arrays.asList());
 
         createPostDto = new CreatePostDto("Test Post", "Test content", 1L, 1L);
-        updatePostDto = new UpdatePostDto("Updated Post", "Updated content", 1L);
     }
     @Test
     void shouldCreateAPost(){
@@ -100,7 +94,7 @@ class PostServiceTest {
         when(postRepo.findAll()).thenReturn(List.of(testPost));
 
         // THen
-        ResponseEntity<List<PostDto>> postList = postService.getPostsList();
+        ResponseEntity<List<CreatePostDto>> postList = postService.getPostsList();
 
         //Then
         assertNotNull(postList.getBody());
@@ -118,9 +112,10 @@ class PostServiceTest {
         // Given
         when(postRepo.findById(1L)).thenReturn(Optional.of(testPost));
         // When
-        ResponseEntity<PostDto> result = postService.getPostById(1L);
+        ResponseEntity<CreatePostDto> result = postService.getPostById(1L);
         //Then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertNotNull(result.getBody());
         assertThat(result.getBody().getTitle()).isEqualTo("Test Post");
         verify(postRepo).findById(1L);
     }
@@ -142,7 +137,7 @@ class PostServiceTest {
         when(postRepo.findById(1L)).thenReturn(Optional.of(testPost));
         when(categoryRepo.findById(1L)).thenReturn(Optional.of(testCategory));
         //When
-        var result = postService.updatePost(1L,updatePostDto);
+        var result = postService.updatePost(1L,createPostDto);
         //Then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(postRepo).findById(1L);
@@ -155,7 +150,7 @@ class PostServiceTest {
         when(postRepo.searchByTitle("Test Post")).thenReturn(List.of(testPost));
 
         //When
-        ResponseEntity<List<PostDto>> result = postService.searchPostByTitle("Test Post");
+        ResponseEntity<List<CreatePostDto>> result = postService.searchPostByTitle("Test Post");
         //THen
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertNotNull(result.getBody());

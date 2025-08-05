@@ -2,9 +2,6 @@ package org.sebas.blogbackendspringboot.controller;
 
 import jakarta.validation.Valid;
 import org.sebas.blogbackendspringboot.dto.CreatePostDto;
-import org.sebas.blogbackendspringboot.dto.PostDto;
-import org.sebas.blogbackendspringboot.dto.UpdatePostDto;
-import org.sebas.blogbackendspringboot.model.Post;
 import org.sebas.blogbackendspringboot.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +21,7 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<List<PostDto>> getPostsList(){
+    public ResponseEntity<List<CreatePostDto>> getPostsList(){
         return service.getPostsList();
     }
 
@@ -34,13 +31,13 @@ public class PostController {
     }
 
     @GetMapping("/posts/{id}")
-    public ResponseEntity<PostDto> getPostById(@PathVariable long id){
+    public ResponseEntity<CreatePostDto> getPostById(@PathVariable long id){
         return service.getPostById(id);
     }
 
     @PutMapping("/posts/{id}")
-    public ResponseEntity<?> updatePost(@PathVariable Long id, @Valid @RequestBody UpdatePostDto updatePostDto){
-        return service.updatePost(id, updatePostDto);
+    public ResponseEntity<?> updatePost(@PathVariable Long id, @Valid @RequestBody CreatePostDto createPostDto){
+        return service.updatePost(id,createPostDto);
     }
 
     @DeleteMapping("/posts/{id}")
@@ -53,7 +50,7 @@ public class PostController {
      * Returns posts matching the title parameter
      */
     @GetMapping("/posts/search")
-    public ResponseEntity<List<PostDto>> searchPostByTitle(@RequestParam(value = "title") String title){
+    public ResponseEntity<List<CreatePostDto>> searchPostByTitle(@RequestParam(value = "title") String title){
         return service.searchPostByTitle(title);
     }
 
@@ -62,7 +59,7 @@ public class PostController {
      * Returns all posts written by the specified author
      */
     @GetMapping("/posts/author/{id}")
-    public ResponseEntity<List<PostDto>> searchPostByAuthor(@PathVariable Long id){
+    public ResponseEntity<List<CreatePostDto>> searchPostByAuthor(@PathVariable Long id){
         return service.searchPostByAuthorId(id);
     }
 }

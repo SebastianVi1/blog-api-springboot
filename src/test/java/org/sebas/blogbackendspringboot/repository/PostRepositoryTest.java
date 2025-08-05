@@ -4,7 +4,6 @@ package org.sebas.blogbackendspringboot.repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.sebas.blogbackendspringboot.dto.CreatePostDto;
-import org.sebas.blogbackendspringboot.dto.UpdatePostDto;
 import org.sebas.blogbackendspringboot.model.Category;
 import org.sebas.blogbackendspringboot.model.Post;
 import org.sebas.blogbackendspringboot.model.User;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +31,6 @@ class PostRepositoryTest {
     private Category testCategory;
     private Post testPost;
     private CreatePostDto createPostDto;
-    private UpdatePostDto updatePostDto;
 
     @BeforeEach
     void setUp(){
@@ -56,7 +53,6 @@ class PostRepositoryTest {
         testPost.setComments(List.of());
 
         createPostDto = new CreatePostDto("Test Post", "Test content", testUser.getId(), testCategory.getId());
-        updatePostDto = new UpdatePostDto("Updated Post", "Updated content", testCategory.getId());
     }
     @Test
     void shouldFindByTitle() {

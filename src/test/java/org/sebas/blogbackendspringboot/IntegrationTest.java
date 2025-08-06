@@ -22,9 +22,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.isIn;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -109,5 +109,18 @@ public class IntegrationTest {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].title").value("Test Post"));
+    }
+
+    @Test
+    void shouldDeleteAPost() throws Exception {
+        Post savedPost = postRepo.save(testPost);
+        assertThat(postRepo.findAll())
+            .extracting(Post::getId)
+            .contains(savedPost.getId());
+        mockMvc.perform(delete("/api/posts/{id}",savedPost.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        assertThat(postRepo.findAll()).hasSize(0);
     }
 }

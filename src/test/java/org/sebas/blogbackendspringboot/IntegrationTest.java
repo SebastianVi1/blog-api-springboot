@@ -23,6 +23,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -96,5 +97,17 @@ public class IntegrationTest {
         assertThat(posts.getFirst().getContent())
                 .startsWith("T")
                 .isEqualToIgnoringCase("Test content");
+    }
+
+    @Test
+    void shoulReturnAllTasks() throws Exception {
+        postRepo.save(testPost);
+        assertThat(postRepo.findAll()).hasSize(1);
+        mockMvc.perform(get("/api/posts")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].title").value("Test Post"));
     }
 }

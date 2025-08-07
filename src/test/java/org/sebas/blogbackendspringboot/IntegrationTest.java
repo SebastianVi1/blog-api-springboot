@@ -146,4 +146,16 @@ public class IntegrationTest {
                 .andExpect(jsonPath("$.title").value("Test Post Dto"));
     }
 
+    @Test
+    void shouldReturnASearchedPostList() throws Exception {
+        assertThat(postRepo.findAll()).hasSizeGreaterThan(0);
+        mockMvc.perform(get("/api/posts/search")
+                        .param("title","test post")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].title").value("Test Post"));
+    }
+
 }

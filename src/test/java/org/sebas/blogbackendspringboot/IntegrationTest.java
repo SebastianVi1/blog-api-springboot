@@ -10,7 +10,6 @@ import org.sebas.blogbackendspringboot.model.User;
 import org.sebas.blogbackendspringboot.repo.CategoryRepo;
 import org.sebas.blogbackendspringboot.repo.PostRepo;
 import org.sebas.blogbackendspringboot.repo.UserRepo;
-import org.sebas.blogbackendspringboot.service.JWTService;
 import org.sebas.blogbackendspringboot.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -123,4 +122,17 @@ public class IntegrationTest {
 
         assertThat(postRepo.findAll()).hasSize(0);
     }
+
+    @Test
+    void sohuldReturnAPostDtoFromId() throws Exception {
+        testPost = postRepo.save(testPost);
+        assertThat(postRepo.findAll()).extracting(post -> post.getId())
+                        .contains(testPost.getId());
+        mockMvc.perform(get("/api/posts/{id}", testPost.getId() )
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Test Post"));
+
+    }
+
 }

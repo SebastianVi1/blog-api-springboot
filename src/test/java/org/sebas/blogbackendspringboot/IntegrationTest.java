@@ -72,14 +72,16 @@ public class IntegrationTest {
         testPost.setCategory(testCategory);
         testPost.setCreatedDate(LocalDateTime.now());
         testPost.setComments(List.of());
+        testPost = postRepo.save(testPost);
 
-        createPostDto = new CreatePostDto("Test Post", "Test content",testUser.getId(),testCategory.getId());
+        createPostDto = new CreatePostDto("Test Post Dto", "Test content...",testUser.getId(),testCategory.getId());
     }
     @Test
     void contextLoads() {}
 
     @Test
     void shouldCreateAPost() throws Exception {
+        postRepo.deleteAll();
         String json = objectMapper.writeValueAsString(createPostDto);
 
         mockMvc.perform(post("/api/posts")
@@ -91,11 +93,11 @@ public class IntegrationTest {
         List<Post> posts = postRepo.findAll();
 
         assertThat(posts).hasSize(1);
-        assertThat(posts.getFirst().getTitle()).isEqualTo("Test Post");
+        assertThat(posts.getFirst().getTitle()).isEqualTo("Test Post Dto");
         assertThat(posts.getFirst().getId()).isNotNull();
         assertThat(posts.getFirst().getContent())
                 .startsWith("T")
-                .isEqualToIgnoringCase("Test content");
+                .isEqualToIgnoringCase("Test content...");
     }
 
     @Test
@@ -112,11 +114,10 @@ public class IntegrationTest {
 
     @Test
     void shouldDeleteAPost() throws Exception {
-        Post savedPost = postRepo.save(testPost);
         assertThat(postRepo.findAll())
             .extracting(Post::getId)
-            .contains(savedPost.getId());
-        mockMvc.perform(delete("/api/posts/{id}",savedPost.getId())
+            .contains(testPost.getId());
+        mockMvc.perform(delete("/api/posts/{id}",testPost.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -125,7 +126,6 @@ public class IntegrationTest {
 
     @Test
     void sohuldReturnAPostDtoFromId() throws Exception {
-        testPost = postRepo.save(testPost);
         assertThat(postRepo.findAll()).extracting(post -> post.getId())
                         .contains(testPost.getId());
         mockMvc.perform(get("/api/posts/{id}", testPost.getId() )
@@ -133,6 +133,17 @@ public class IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Test Post"));
 
+    }
+
+    @Test
+    void shouldUpdateAExistentPost() throws Exception {
+        mockMvc.perform(put("/api/posts/{id}", testPost.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(objectMapper.writeValueAsString(createPostDto)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.title").value("Test Post Dto"));
     }
 
 }

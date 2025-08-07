@@ -101,18 +101,22 @@ public class PostService {
         if (existingPost.isEmpty()){
             return ResponseEntity.notFound().build();
         }
-        
         if (category.isEmpty()) {
             return ResponseEntity.badRequest().body("Category not found");
         }
-        
         Post post = existingPost.get();
         post.setTitle(updatePostDto.getTitle());
         post.setContent(updatePostDto.getContent());
         post.setCategory(category.get());
-        
         repo.save(post);
-        return ResponseEntity.ok(post);
+        // Map Post to CreatePostDto (flat DTO, no nested objects)
+        CreatePostDto responseDto = new CreatePostDto(
+            post.getTitle(),
+            post.getContent(),
+            post.getAuthor().getId(),
+            post.getCategory().getId()
+        );
+        return ResponseEntity.ok(responseDto);
     }
 
     public ResponseEntity<?> deletePost(Long id){

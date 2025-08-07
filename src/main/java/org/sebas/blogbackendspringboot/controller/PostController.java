@@ -2,6 +2,7 @@ package org.sebas.blogbackendspringboot.controller;
 
 import jakarta.validation.Valid;
 import org.sebas.blogbackendspringboot.dto.CreatePostDto;
+import org.sebas.blogbackendspringboot.model.Post;
 import org.sebas.blogbackendspringboot.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +37,8 @@ public class PostController {
     }
 
     @PutMapping("/posts/{id}")
-    public ResponseEntity<?> updatePost(@PathVariable Long id, @Valid @RequestBody CreatePostDto createPostDto){
-        return service.updatePost(id,createPostDto);
+    public ResponseEntity<?> updatePost(@PathVariable Long id, @Valid @RequestBody CreatePostDto updatedPostDto){
+        return service.updatePost(id,updatedPostDto);
     }
 
     @DeleteMapping("/posts/{id}")

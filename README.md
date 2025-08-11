@@ -1,6 +1,6 @@
 # Blog Backend API
 
-A RESTful API for a blog system built with Spring Boot, featuring JWT authentication, post management, and comment functionality with comprehensive input validation.
+A RESTful API for a blog system built with Spring Boot, featuring JWT authentication, post management, and comment functionality with comprehensive input validation, extensive testing, and API documentation.
 
 ## 🚀 Features
 
@@ -11,10 +11,12 @@ A RESTful API for a blog system built with Spring Boot, featuring JWT authentica
 - **Search Functionality** - Search posts by title and author
 - **User Management** - User registration and authentication
 - **Input Validation** - Comprehensive validation for all endpoints
-- **DTO Pattern** - Secure data transfer with validation (now using CreatePostDto for posts)
+- **DTO Pattern** - Secure data transfer with validation (using CreatePostDto for posts)
 - **Global Exception Handling** - Structured error responses
-- **Refactored Post Endpoints** - All post endpoints now use CreatePostDto instead of PostDto
 - **Consistent API Responses** - Unified response structure for post operations
+- **API Documentation** - OpenAPI/Swagger UI integration for interactive API exploration
+- **Comprehensive Testing** - Unit tests, integration tests, and JWT authentication tests
+- **Database Auditing** - Automatic timestamp management with @CreationTimestamp
 
 ## 🛠️ Tech Stack
 
@@ -22,10 +24,14 @@ A RESTful API for a blog system built with Spring Boot, featuring JWT authentica
 - **Spring Boot 3.5.3**
 - **Spring Security** - Authentication and authorization
 - **Spring Data JPA** - Database operations
-- **MySQL** - Database
+- **MySQL** - Database (with H2 for testing)
 - **JWT** - JSON Web Tokens for authentication
 - **Lombok** - Reduces boilerplate code
 - **Maven** - Dependency management
+- **SpringDoc OpenAPI** - API documentation and Swagger UI
+- **JUnit 5** - Testing framework
+- **AssertJ** - Fluent assertions for testing
+- **MockMvc** - Web layer testing
 
 ## 📋 Prerequisites
 
@@ -61,13 +67,19 @@ mvn spring-boot:run
 
 The API will be available at `http://localhost:8080`
 
+### 5. Access API Documentation
+Once the application is running, access the interactive API documentation at:
+```
+http://localhost:8080/swagger-ui.html
+```
+
 ## 📚 API Endpoints
 
 ### Authentication
 - `POST /api/register` - Register a new user
 - `POST /api/login` - Login and get JWT token
 
-### Posts (now using CreatePostDto)
+### Posts (using CreatePostDto)
 - `GET /api/posts` - Get all posts (returns List<CreatePostDto>)
 - `POST /api/posts` - Create a new post (accepts CreatePostDto)
 - `GET /api/posts/{id}` - Get post by ID (returns CreatePostDto)
@@ -166,7 +178,6 @@ src/main/java/org/sebas/blogbackendspringboot/
 │   ├── CommentDto.java
 │   ├── UserRegistrationDto.java
 │   ├── UserLoginDto.java
-│   ├── UpdatePostDto.java
 │   └── CreateCommentDto.java
 ├── repo/               # Repository interfaces
 │   ├── PostRepo.java
@@ -178,6 +189,16 @@ src/main/java/org/sebas/blogbackendspringboot/
 │   └── JWTFilter.java
 └── exception/          # Exception handling
     └── GlobalExceptionHandler.java
+
+src/test/java/org/sebas/blogbackendspringboot/
+├── integration/        # Integration tests
+│   ├── IntegrationTest.java
+│   └── JWTAuthenticationIntegrationTest.java
+├── controller/         # Controller unit tests
+│   └── PostControllerTest.java
+├── service/           # Service unit tests
+│   └── PostServiceTest.java
+└── TestSecurityConfig.java
 ```
 
 ## 🔐 Security Features
@@ -187,6 +208,7 @@ src/main/java/org/sebas/blogbackendspringboot/
 - **Token Validation** - Automatic token verification for protected endpoints
 - **User Authentication** - Username/password authentication
 - **Role-based Access** - User roles for authorization
+- **Stateless Sessions** - No server-side session storage
 
 ## ✅ Validation Features
 
@@ -206,14 +228,55 @@ The application uses the following main entities:
 
 ## 🧪 Testing
 
-Run tests with:
+### Test Coverage
+The project includes comprehensive testing at multiple levels:
+
+- **Unit Tests** - Service layer testing with Mockito
+- **Integration Tests** - Full API endpoint testing with MockMvc
+- **JWT Authentication Tests** - Complete authentication flow testing
+- **Security Tests** - Protected endpoint access validation
+
+### Running Tests
 ```bash
+# Run all tests
 mvn test
 ```
 
-## 📦 Build
+### Test Categories
 
-Build the application:
+#### Unit Tests
+- **PostServiceTest** - Tests business logic for post operations
+- **Controller Tests** - Tests REST endpoint behavior with mocked services
+
+#### Integration Tests
+- **IntegrationTest** - Tests complete post CRUD operations with database
+- **JWTAuthenticationIntegrationTest** - Tests JWT authentication flow end-to-end
+
+#### Test Features
+- **H2 In-Memory Database** - Fast test execution
+- **Test Data Setup** - Automatic test data creation and cleanup
+- **Security Context** - Tests run with proper authentication context
+- **Database Isolation** - Each test runs in isolated database state
+
+## 📚 API Documentation
+
+### OpenAPI/Swagger Integration
+The project includes SpringDoc OpenAPI for automatic API documentation:
+
+- **Interactive Documentation** - Available at `/swagger-ui.html`
+- **API Specification** - OpenAPI 3.0 compliant
+- **Request/Response Examples** - Built-in examples for all endpoints
+- **Authentication Support** - JWT token input in Swagger UI
+
+### Documentation Features
+- **Endpoint Descriptions** - Detailed descriptions for all API operations
+- **Request/Response Schemas** - Complete data model documentation
+- **Validation Rules** - Documented input validation requirements
+- **Error Responses** - Documented error codes and messages
+
+## 📦 Build & Deployment
+
+### Development
 ```bash
 mvn clean package
 ```
